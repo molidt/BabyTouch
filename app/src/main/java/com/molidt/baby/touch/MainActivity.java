@@ -1,5 +1,7 @@
 package com.molidt.baby.touch;
 
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -56,6 +58,13 @@ public class MainActivity extends RxAppCompatActivity {
                         Log.e("BABY", throwable.getMessage());
                     }
                 });
+
+        Intent intent = new Intent(this, BabyService.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(intent);
+        } else {
+            startService(intent);
+        }
     }
 
     @Override
