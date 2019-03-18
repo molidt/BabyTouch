@@ -8,7 +8,7 @@ import android.provider.BaseColumns;
  * 数据库实体操作类
  * Created by Jianan on 2017/8/4.
  */
-public abstract class DbEntry implements BaseColumns {
+public abstract class DbTable implements BaseColumns {
 
     protected static int parseBoolToInt(boolean bool) {
         return bool ? 1 : 0;
@@ -52,7 +52,7 @@ public abstract class DbEntry implements BaseColumns {
 
     protected SQLiteDatabase db;
 
-    public DbEntry(SQLiteDatabase db) {
+    public DbTable(SQLiteDatabase db) {
         this.db = db;
     }
 

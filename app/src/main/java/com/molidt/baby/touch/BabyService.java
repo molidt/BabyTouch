@@ -3,12 +3,15 @@ package com.molidt.baby.touch;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.IBinder;
+
+import com.molidt.baby.touch.data.db.DbManager;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -19,6 +22,8 @@ import androidx.core.app.NotificationCompat;
  **/
 public class BabyService extends Service {
 
+    public static final String ACTION_TOUCH = "com.molidt.baby.touch.ACTION.TOUCH";
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -27,9 +32,13 @@ public class BabyService extends Service {
             channelId = createNotificationChannel(getString(R.string.app_name), getString(R.string.app_name));
         }
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId);
+        Intent intent = new Intent(this, BabyService.class);
+        intent.setAction(ACTION_TOUCH);
+        PendingIntent pendingIntent = PendingIntent.getService(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setSmallIcon(R.mipmap.ic_launcher)
                 .setContentText(getString(R.string.app_name))
-                .setAutoCancel(true);
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent);
         startForeground(1, builder.build());
     }
 
@@ -39,7 +48,9 @@ public class BabyService extends Service {
         chan.setLightColor(Color.BLUE);
         chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
         NotificationManager service = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        service.createNotificationChannel(chan);
+        if (service != null) {
+            service.createNotificationChannel(chan);
+        }
         return channelId;
     }
 
@@ -51,7 +62,11 @@ public class BabyService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        return super.onStartCommand(intent, flags, startId);
+        String action = intent.getAction();
+        if (ACTION_TOUCH.equals(action)) {
+            DbManager.get(this).addNewTouch();
+        }
+        return START_STICKY;
     }
 
     @Override

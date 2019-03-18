@@ -6,6 +6,7 @@ package com.molidt.baby.touch.data;
 public class Touch {
 
     private long time;
+    private int state;
 
     public long getTime() {
         return time;
@@ -13,5 +14,13 @@ public class Touch {
 
     public void setTime(long time) {
         this.time = time;
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
     }
 }

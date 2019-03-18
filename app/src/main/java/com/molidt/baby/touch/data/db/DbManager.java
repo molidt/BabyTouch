@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.molidt.baby.touch.data.Touch;
+
 /**
  * create by Jianan at 2019-03-11
  **/
@@ -29,17 +31,10 @@ public class DbManager extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        if (touchTable == null) {
-            touchTable = new TouchTable(db);
-        }
-        getTouchTable().createTable(db);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (oldVersion < newVersion) {
-            onCreate(db);
-        }
     }
 
     private TouchTable getTouchTable() {
@@ -50,6 +45,8 @@ public class DbManager extends SQLiteOpenHelper {
     }
 
     public void addNewTouch() {
-        getTouchTable().addTouch();
+        Touch touch = new Touch();
+        touch.setTime(System.currentTimeMillis());
+        getTouchTable().addTouch(touch);
     }
 }
