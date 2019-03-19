@@ -22,32 +22,35 @@ import androidx.core.app.NotificationCompat;
  **/
 public class BabyService extends Service {
 
+    public static final String NOTIFICATION_CHANNEL = "BabyTouch";
     public static final String ACTION_TOUCH = "com.molidt.baby.touch.ACTION.TOUCH";
     public static final String ACTION_TOUCH_SAVE_SUCCESS = "com.molidt.baby.touch.ACTION_TOUCH_SAVE_SUCCESS";
 
     @Override
     public void onCreate() {
         super.onCreate();
-        String channelId = "";
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            channelId = createNotificationChannel(getString(R.string.app_name), getString(R.string.app_name));
+             createNotificationChannel(NOTIFICATION_CHANNEL, getString(R.string.app_name));
         }
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL);
         Intent intent = new Intent(this, BabyService.class);
         intent.setAction(ACTION_TOUCH);
         PendingIntent pendingIntent = PendingIntent.getService(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setSmallIcon(R.mipmap.ic_launcher)
                 .setContentText(getString(R.string.app_name))
                 .setAutoCancel(true)
+                .setOngoing(true)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setContentIntent(pendingIntent);
         startForeground(1, builder.build());
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private String createNotificationChannel(String channelId, String channelName) {
-        NotificationChannel chan = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_NONE);
+        NotificationChannel chan = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH);
         chan.setLightColor(Color.BLUE);
-        chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+        chan.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
         NotificationManager service = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (service != null) {
             service.createNotificationChannel(chan);
