@@ -23,6 +23,7 @@ import androidx.core.app.NotificationCompat;
 public class BabyService extends Service {
 
     public static final String ACTION_TOUCH = "com.molidt.baby.touch.ACTION.TOUCH";
+    public static final String ACTION_TOUCH_SAVE_SUCCESS = "com.molidt.baby.touch.ACTION_TOUCH_SAVE_SUCCESS";
 
     @Override
     public void onCreate() {
@@ -65,6 +66,9 @@ public class BabyService extends Service {
         String action = intent.getAction();
         if (ACTION_TOUCH.equals(action)) {
             DbManager.get(this).addNewTouch();
+            Intent successIntent = new Intent();
+            successIntent.setAction(ACTION_TOUCH_SAVE_SUCCESS);
+            sendBroadcast(successIntent);
         }
         return START_STICKY;
     }

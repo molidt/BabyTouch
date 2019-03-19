@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.molidt.baby.touch.data.Touch;
 
+import java.util.List;
+
 /**
  * create by Jianan at 2019-03-11
  **/
@@ -48,5 +50,9 @@ public class DbManager extends SQLiteOpenHelper {
         Touch touch = new Touch();
         touch.setTime(System.currentTimeMillis());
         getTouchTable().addTouch(touch);
+    }
+
+    public List<Touch> getAllTouch() {
+        return getTouchTable().getAllTouch();
     }
 }
